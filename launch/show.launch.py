@@ -16,14 +16,27 @@ import os
 
 from launch import LaunchDescription
 from ament_index_python.packages import get_package_share_directory
-from launch_pal.include_utils import include_launch_py_description
+from launch.actions import IncludeLaunchDescription, GroupAction, DeclareLaunchArgument
+from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch.substitutions import PathJoinSubstitution, LaunchConfiguration
+# from launch_pal.include_utils import include_launch_py_description
 from launch_ros.actions import Node
 
 
 def generate_launch_description():
 
-    robot_state_publisher = include_launch_py_description(
-        'human_description', ['launch', 'robot_state_publisher.launch.py'])
+    # robot_state_publisher = include_launch_py_description(
+    #     'human_description', ['launch', 'robot_state_publisher.launch.py'])
+
+    robot_state_publisher = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(
+                get_package_share_directory("human_description"),
+                "launch",
+                "robot_state_publisher.launch.py",
+            )
+        )
+    )
 
     start_joint_pub_gui = Node(
         package='joint_state_publisher_gui',

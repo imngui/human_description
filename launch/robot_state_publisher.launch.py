@@ -20,7 +20,9 @@ from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, OpaqueFunction
 
-from launch_pal.arg_utils import read_launch_argument
+# from launch_pal.arg_utils import read_launch_argument
+from launch.substitutions import LaunchConfiguration
+from launch.utilities import perform_substitutions
 from launch_param_builder import load_xacro
 from launch_ros.actions import Node
 
@@ -51,10 +53,15 @@ def launch_setup(context, *args, **kwargs):
                     "urdf",
                     "human-tpl.xacro",
                 )
+                # os.path.join(
+                #     get_package_share_directory("human_description"),
+                #     "urdf",
+                #     "human-no-legs.xacro",
+                # )
             ),
             {
-                "height": read_launch_argument("height", context),
-                "use_sim": read_launch_argument("use_sim_time", context),
+                "height": perform_substitutions(context, [LaunchConfiguration("height")]),
+                "use_sim": perform_substitutions(context, [LaunchConfiguration("use_sim_time")]),
             },
         )
     }
