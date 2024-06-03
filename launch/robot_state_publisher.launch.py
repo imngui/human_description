@@ -48,16 +48,17 @@ def launch_setup(context, *args, **kwargs):
     robot_description = {
         "robot_description": load_xacro(
             Path(
-                os.path.join(
-                    get_package_share_directory("human_description"),
-                    "urdf",
-                    "human-tpl.xacro",
-                )
                 # os.path.join(
                 #     get_package_share_directory("human_description"),
                 #     "urdf",
-                #     "human-no-legs.xacro",
+                #     "human-tpl.xacro",
                 # )
+                
+                os.path.join(
+                    get_package_share_directory("human_description"),
+                    "urdf",
+                    "human-no-legs.xacro",
+                )
             ),
             {
                 "height": perform_substitutions(context, [LaunchConfiguration("height")]),
