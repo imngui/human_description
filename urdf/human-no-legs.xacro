@@ -23,6 +23,7 @@
     <xacro:property name="leg_length" value="${size_unit*2 + size_unit*1.5}" />
 
     <xacro:property name="limb_radius" value="0.03" />
+    <xacro:property name="hand_size" value="${limb_radius*2}" />
 
     <!-- Materials -->
     <material name="yellow-skin">
@@ -317,12 +318,47 @@
 
         <link name="${suffix}_wrist_${id}">
         </link>
+
         <joint name="${suffix}_wrist_${id}" type="fixed">
             <parent link="${suffix}_elbow_${id}"/>
             <child link="${suffix}_wrist_${id}"/>
             <origin rpy="0 0 0" xyz="0 0 -${forearm_length}" />
         </joint>
 
+        <link name="${suffix}_wrist_intermediate_r_${id}">
+        </link>
+
+        <joint name="${suffix}_wrist_r_${id}" type="revolute">
+            <axis xyz="0 1 0" />
+            <limit effort="1000" lower="-0.4" upper="0.4" velocity="0.5" />
+            <parent link="${suffix}_wrist_${id}" />
+            <child link="${suffix}_wrist_intermediate_r_${id}" />
+            <origin rpy="0 ${pi / 2} 0" xyz="0 0 0" />
+        </joint>
+
+        <link name="${suffix}_wrist_intermediate_y_${id}">
+            <visual>
+                <geometry>
+                    <box size="${hand_size} ${hand_size} ${hand_size}" />
+                </geometry>
+                <material name="yellow-skin-dark" />
+                <origin rpy="0 0 0" xyz="0 0 0" />
+            </visual>
+            <collision>
+                <geometry>
+                    <box size="${hand_size} ${hand_size} ${hand_size}" />
+                </geometry>
+                <origin rpy="0 0 0" xyz="0 0 0" />
+            </collision>
+        </link>
+
+        <joint name="${suffix}_wrist_y_${id}" type="revolute">
+            <axis xyz="0 0 1" />
+            <limit effort="1000" lower="-0.2" upper="0.2" velocity="0.5" />
+            <parent link="${suffix}_wrist_intermediate_r_${id}" />
+            <child link="${suffix}_wrist_intermediate_y_${id}" />
+            <origin rpy="0 0 0" xyz="0 0 0" />
+        </joint>
     </xacro:macro>
 
     <xacro:arm suffix="l" reflect="1" parent="torso_${id}" />
