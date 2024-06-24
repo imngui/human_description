@@ -15,14 +15,14 @@
     <xacro:property name="neck_length" value="${size_unit * 0.25}" />
     <xacro:property name="neck_shoulder_length" value="${size_unit*0.8}" />
     <xacro:property name="upperarm_length" value="${size_unit*1.6}" />
-    <xacro:property name="forearm_length" value="${size_unit}" />
+    <xacro:property name="forearm_length" value="${size_unit*1.3}" />
     <xacro:property name="torso_height" value="${size_unit*2.75}" />
     <xacro:property name="waist_length" value="${size_unit*1.2}" />
     <xacro:property name="tight_length" value="${size_unit*1.5}" />
     <xacro:property name="tibia_length" value="${size_unit*2}" />
     <xacro:property name="leg_length" value="${size_unit*2 + size_unit*1.5}" />
 
-    <xacro:property name="limb_radius" value="0.03" />f
+    <xacro:property name="limb_radius" value="0.03" />
     <xacro:property name="hand_size" value="${limb_radius*2}" />
 
     <!-- Materials -->
