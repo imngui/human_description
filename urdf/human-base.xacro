@@ -22,7 +22,7 @@
     <xacro:property name="tibia_length" value="${size_unit*2}" />
     <xacro:property name="leg_length" value="${size_unit*2 + size_unit*1.5}" />
 
-    <xacro:property name="limb_radius" value="0.03" />f
+    <xacro:property name="limb_radius" value="0.03" />
     <xacro:property name="hand_size" value="${limb_radius*2}" />
 
     <!-- Materials -->
@@ -63,7 +63,7 @@
         <origin rpy="0 0 0" xyz="0 0 0" />
     </joint>
 
-    <link name="leg_${id}">
+    <link name="moving_leg_${id}">
         <visual>
             <geometry>
                 <sphere radius="${limb_radius}"/>
@@ -79,9 +79,9 @@
         </collision>
     </link>
 
-    <joint name="leg_crouch_joint_${id}" type="prismatic">
+    <joint name="moving_leg_joint_${id}" type="prismatic">
         <parent link="fixed_leg_${id}" />
-        <child link="leg_${id}" />
+        <child link="moving_leg_${id}" />
         <axis xyz="0 0 1" />
         <limit effort="1000.0" lower="-0.5" upper="0.0" velocity="0.5" />
         <origin rpy="0 0 0" xyz="0 0 ${leg_length}" />
@@ -143,15 +143,15 @@
         <origin rpy="0 0 0" xyz="0 0 ${torso_height}" />
     </joint>
 
-    <joint name="waist_rot_${id}" type="revolute">
+    <joint name="waist_${id}_z" type="revolute">
         <axis xyz="0 0 1" />
         <limit effort="1000" lower="-.4" upper="0.4" velocity="0.5" />
-        <parent link="leg_${id}"/>
+        <parent link="moving_leg_${id}"/>
         <child link="waist_intermediate_${id}"/>
         <origin rpy="0 0 0" xyz="0 0 0" />
     </joint>
 
-    <joint name="waist_bend_${id}" type="revolute">
+    <joint name="waist_${id}" type="revolute">
         <axis xyz="0 1 0" />
         <limit effort="1000" lower="-.2" upper="1." velocity="0.5" />
         <parent link="waist_intermediate_${id}"/>
@@ -318,38 +318,23 @@
 
         <link name="${suffix}_wrist_${id}">
         </link>
-
         <joint name="${suffix}_wrist_${id}" type="fixed">
             <parent link="${suffix}_elbow_${id}"/>
             <child link="${suffix}_wrist_${id}"/>
             <origin rpy="0 0 0" xyz="0 0 -${forearm_length}" />
         </joint>
 
-        <link name="${suffix}_wrist_intermediate_r_${id}">
-        </link>
-
-        <joint name="${suffix}_wrist_r_${id}" type="revolute">
-            <axis xyz="0 1 0" />
-            <limit effort="1000" lower="-0.4" upper="0.4" velocity="0.5" />
-            <parent link="${suffix}_wrist_${id}" />
-            <child link="${suffix}_wrist_intermediate_r_${id}" />
-            <origin rpy="0 ${pi / 2} 0" xyz="0 0 0" />
-        </joint>
-
-        
-
         <link name="${suffix}_wrist_intermediate_y_${id}">
         </link>
-
-        <joint name="${suffix}_wrist_y_${id}" type="revolute">
-            <axis xyz="0 0 1" />
-            <limit effort="1000" lower="-0.2" upper="0.2" velocity="0.5" />
-            <parent link="${suffix}_wrist_intermediate_r_${id}" />
+        <joint name="${suffix}_wrist_intermediate_y_${id}" type="revolute">
+            <parent link="${suffix}_wrist_${id}" />
             <child link="${suffix}_wrist_intermediate_y_${id}" />
-            <origin rpy="0 0 0" xyz="0 0 0" />
+            <limit effort="1000" lower="-0.4" upper="0.4" velocity="0.5" />
+            <origin rpy="0 ${pi / 2} 0" xyz="0 0 0" />
+            <axis xyz="0 1 0" />
         </joint>
 
-        <link name="${suffix}_wrist_intermediate_fixed_${id}">
+        <link name="${suffix}_hand_${id}">
             <visual>
                 <geometry>
                     <box size="${hand_size} ${hand_size} ${hand_size}" />
@@ -359,17 +344,20 @@
             </visual>
             <collision>
                 <geometry>
-                    <box size="${hand_size} ${hand_size} ${hand_size}" />
+                    <box size="${hand_size} ${hand_size} ${hand_size}"/>
                 </geometry>
                 <origin rpy="0 0 0" xyz="0 0 0" />
             </collision>
         </link>
 
-        <joint name="${suffix}_wrist_intermediate_fixed_${id}" type="fixed">
+        <joint name="${suffix}_hand_${id}" type="revolute">
             <parent link="${suffix}_wrist_intermediate_y_${id}" />
-            <child link="${suffix}_wrist_intermediate_fixed_${id}" />
-            <origin rpy="0 0 0" xyz="0 0 0" />
+            <child link="${suffix}_hand_${id}" />
+            <limit effort="1000" lower="-0.3" upper="0.3" velocity="0.5" />
+            <origin rpy="0 ${pi / 2} 0" xyz="0 0 0" />
+            <axis xyz="0 1 0" />
         </joint>
+
     </xacro:macro>
 
     <xacro:arm suffix="l" reflect="1" parent="torso_${id}" />
