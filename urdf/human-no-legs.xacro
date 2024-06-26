@@ -365,10 +365,12 @@
             </collision>
         </link>
 
-        <joint name="${suffix}_wrist_intermediate_fixed_${id}" type="fixed">
+        <joint name="${suffix}_wrist_intermediate_fixed_${id}" type="prismatic">
             <parent link="${suffix}_wrist_intermediate_y_${id}" />
             <child link="${suffix}_wrist_intermediate_fixed_${id}" />
+            <axis xyz="1 0 0" />
             <origin rpy="0 0 0" xyz="0 0 0" />
+            <limit effort="1000.0" lower="0.0" upper="0.001" velocity="0.5" />
         </joint>
     </xacro:macro>
 
